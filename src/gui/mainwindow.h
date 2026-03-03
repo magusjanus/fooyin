@@ -71,6 +71,7 @@ protected:
     bool event(QEvent* event) override;
     void showEvent(QShowEvent* event) override;
     void closeEvent(QCloseEvent* event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 
 private:
     WindowState currentState();
@@ -79,6 +80,7 @@ private:
     void restoreState(WindowState state);
     void hideToTray(bool hide);
 
+    ActionManager* m_actionManager;
     MainMenuBar* m_mainMenu;
     SettingsManager* m_settings;
     QPointer<StatusWidget> m_statusWidget;

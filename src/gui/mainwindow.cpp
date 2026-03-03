@@ -29,6 +29,7 @@
 #include <gui/guiconstants.h>
 #include <gui/guisettings.h>
 #include <utils/actions/actionmanager.h>
+#include <utils/actions/command.h>
 #include <utils/enum.h>
 #include <utils/settings/settingsdialogcontroller.h>
 #include <utils/settings/settingsmanager.h>
@@ -48,6 +49,7 @@ constexpr auto MainWindowPrevState = "Interface/PrevState";
 namespace Fooyin {
 MainWindow::MainWindow(ActionManager* actionManager, MainMenuBar* menubar, SettingsManager* settings, QWidget* parent)
     : QMainWindow{parent}
+    , m_actionManager{actionManager}
     , m_mainMenu{menubar}
     , m_settings{settings}
     , m_prevState{Normal}
@@ -230,6 +232,21 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
     event->accept();
     QMainWindow::closeEvent(event);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    if(event->button() == Qt::BackButton) {
+        if(auto* prevCmd = m_actionManager->command(Constants::Actions::Previous)) {
+            prevCmd->action()->activate(QAction::Trigger);
+        }
+    }
+    if(event->button() == Qt::ForwardButton) {
+        if(auto* nextCmd = m_actionManager->command(Constants::Actions::Next)) {
+            nextCmd->action()->activate(QAction::Trigger);
+        }
+
+    }
+    QMainWindow::mousePressEvent(event);
 }
 
 MainWindow::WindowState MainWindow::currentState()
